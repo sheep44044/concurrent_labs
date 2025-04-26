@@ -1,18 +1,17 @@
-package spinlock
+import "sync/atomic"
 
-type Spinlock struct {
-	value bool
+type spinlock struct {
+    value int32 
 }
 
-func (sl *Spinlock) Lock() {
-	for {
-		if !sl.value {
-			sl.value = true
-			return
-		}
-	}
+func (sl *spinlock) Lock() {
+    for {
+        if atomic.CompareAndSwapInt32(&sl.value, 0, 1) { 
+            return
+        }
+    }
 }
 
-func (sl *Spinlock) Unlock() {
-	sl.value = false
+func (sl *spinlock) Unlock() {
+    atomic.StoreInt32(&sl.value, 0) 
 }
