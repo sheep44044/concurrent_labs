@@ -1,3 +1,4 @@
+//不会捏
 package semaphore
 
 type Semaphore struct {
